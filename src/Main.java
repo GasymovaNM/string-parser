@@ -8,18 +8,15 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Type expression (for example '3[xyz]4[xy]z', '2[3[x]y]' etc.):");
+        System.out.println("Type expression:");
         while (scanner.hasNext()) {
             String line = scanner.nextLine();
-
-            //todo добавить проверку что скобки идут только после цифр
-            Pattern pattern = Pattern.compile("[\\d\\[\\]a-zA-Z]+");
-            Matcher matcher = pattern.matcher(line);
-            if (!matcher.matches()) {
-                System.out.println("Incorrect input, line should contain only latin letters, digits and '[',']'");
+            try {
+                validate(line);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
                 continue;
             }
-
             Expression root = new Expression();
             handleExpression(line, root);
             root.print();
@@ -71,5 +68,19 @@ public class Main {
 
     private static long countCloseBrackets(String str) {
         return str.chars().filter(ch -> ch == CLOSE_BRACKET).count();
+    }
+
+    private static void validate(String line) {
+        Pattern validLettersPattern = Pattern.compile("[\\d\\[\\]a-zA-Z]+");
+        Matcher matcher = validLettersPattern.matcher(line);
+        if (!matcher.matches()) {
+            throw new IllegalArgumentException("Incorrect input, line should contain only latin letters, digits and '[',']'");
+        }
+
+        Pattern sequencePattern = Pattern.compile("([a-zA-Z]*\\d+\\[.+\\][a-zA-Z]*)|([a-zA-Z]+)");
+        matcher = sequencePattern.matcher(line);
+        if (!matcher.matches()) {
+            throw new IllegalArgumentException("Incorrect expression, valid examples:\n3[xyz]4[xy]z\n2[3[x]y]");
+        }
     }
 }
