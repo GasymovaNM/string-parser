@@ -6,6 +6,7 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        System.out.println("Type expression (for example '3[xyz]4[xy]z'):");
         while (scanner.hasNext()) {
             String line = scanner.nextLine();
 
@@ -14,10 +15,13 @@ public class Main {
             Matcher matcher = pattern.matcher(line);
             if (!matcher.matches()) {
                 System.out.println("Incorrect input, line should contain only latin letters, digits and '[',']'");
-                break;
+                continue;
             }
-            StringBuilder result = new StringBuilder();
+
+            Expression root = new Expression();
             for (int i = 0; i < line.length(); i++) {
+                Expression expression = new Expression();
+                root.append(expression);
                 char c = line.charAt(i);
 
                 if (Character.isDigit(c)) {
@@ -31,23 +35,18 @@ public class Main {
                             digitChar = line.charAt(digitCount);
                         } else break;
                     }
+                    expression.setMultiplier(Integer.parseInt(number.toString()));
 
-                    String numStr = number.toString();
-                    //todo добавить обработку вложенности
-                    if (!numStr.isEmpty()) {
-                        int openBracket = line.indexOf('[', i);
-                        int closeBracket = line.indexOf(']', i);
-                        String substring = line.substring(openBracket + 1, closeBracket);
-                        for (int j = 0; j < Integer.parseInt(numStr); j++) {
-                            result.append(substring);
-                        }
-                        i = closeBracket;
-                    }
+                    int openBracket = line.indexOf('[', i);
+                    int closeBracket = line.indexOf(']', i);
+                    String substring = line.substring(openBracket + 1, closeBracket);
+                    expression.append(substring);
+                    i = closeBracket;
                 } else {
-                    result.append(c);
+                    expression.append(c);
                 }
             }
-            System.out.println(result);
+            root.print();
         }
     }
 }
