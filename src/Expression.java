@@ -3,26 +3,20 @@ import java.util.List;
 
 public class Expression {
 
-    private StringBuilder result = new StringBuilder();
-
+    private Character letter;
     private int multiplier = 1;
-
     private List<Expression> children = new ArrayList<>();
+
+    public void setMultiplier(int multiplier) {
+        this.multiplier = multiplier;
+    }
 
     public void append(Expression child) {
         children.add(child);
     }
 
     public void append(char ch) {
-        result.append(ch);
-    }
-
-    public void append(String str) {
-        result.append(str);
-    }
-
-    public void setMultiplier(int multiplier) {
-        this.multiplier = multiplier;
+        letter = ch;
     }
 
     public void print() {
@@ -33,14 +27,16 @@ public class Expression {
     }
 
     private void printResult(StringBuilder parsedExpressions) {
-        String resultStr = result.toString();
-        if (!resultStr.isEmpty()) {
+        if (letter != null) {
             for (int i = 0; i < multiplier; i++) {
-                parsedExpressions.append(resultStr);
+                parsedExpressions.append(letter);
             }
         }
-        for (Expression expr : children) {
-            expr.printResult(parsedExpressions);
+
+        for (int i = 0; i < multiplier; i++) {
+            for (Expression expr : children) {
+                expr.printResult(parsedExpressions);
+            }
         }
     }
 }
