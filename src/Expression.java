@@ -11,12 +11,12 @@ public class Expression {
         this.multiplier = multiplier;
     }
 
-    public void append(Expression child) {
-        children.add(child);
+    public void setLetter(char ch) {
+        letter = ch;
     }
 
-    public void append(char ch) {
-        letter = ch;
+    public void addExpression(Expression child) {
+        children.add(child);
     }
 
     public void print() {

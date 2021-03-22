@@ -26,7 +26,7 @@ public class Main {
     private static void handleExpression(String line, Expression root) {
         for (int i = 0; i < line.length(); i++) {
             Expression expression = new Expression();
-            root.append(expression);
+            root.addExpression(expression);
             char c = line.charAt(i);
 
             if (Character.isDigit(c)) {
@@ -57,7 +57,7 @@ public class Main {
                 handleExpression(strInBrackets, expression);
                 i = closeBracket;
             } else {
-                expression.append(c);
+                expression.setLetter(c);
             }
         }
     }
